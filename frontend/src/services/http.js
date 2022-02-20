@@ -25,3 +25,12 @@ export const _POST = (url, body, options = {}, withDefaultBaseUrl = true) => {
   options = { ...options, body: JSON.stringify(body) };
   return createRequest("POST", url, options, withDefaultBaseUrl);
 };
+
+export const _PATCH = (url, body, options = {}, withDefaultBaseUrl = true) => {
+  options = { ...options, body: JSON.stringify(body) };
+  return createRequest("PATCH", url, options, withDefaultBaseUrl);
+};
+
+export const _DELETE = (url, options = {}, withDefaultBaseUrl = true) => {
+  return createRequest("DELETE", url, options, withDefaultBaseUrl);
+};

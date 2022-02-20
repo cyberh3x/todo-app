@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const createError = require("http-errors");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -17,6 +20,8 @@ mongoose.connect(config.DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+mongoose.set("useFindAndModify", false);
 
 app.use(cors()); //enable cors
 
@@ -45,9 +50,6 @@ app.use((err, req, res) => {
 
 const port = config.APP_PORT;
 
-app.listen(
-  port,
-  console.log(`Server started on port ${port}`)
-); // Listen on port defined in environment
+app.listen(port, console.log(`Server started on port ${port}`));
 
 module.exports = app;

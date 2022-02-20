@@ -23,11 +23,15 @@ class TodoRepository {
     return this.model.findByIdAndDelete(id);
   }
 
-  updateById(id, object) {
-    const query = { id };
-    return this.model.findOneAndUpdate(query, {
-      $set: { name: object.name, done: object.done },
-    });
+  updateById(id, { name, done }) {
+    const query = { _id: id };
+    return this.model.findOneAndUpdate(
+      query,
+      {
+        $set: { name, done },
+      },
+      { new: true }
+    );
   }
 }
 

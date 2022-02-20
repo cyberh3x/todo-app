@@ -12,7 +12,7 @@ const {
 app.get(GET_ALL_ITEMS, (req, res) => {
   repository
     .findAll()
-    .then((todos) => res.json(todos))
+    .then((todos) => res.json(todos.reverse()))
     .catch((error) => console.log(error));
 });
 

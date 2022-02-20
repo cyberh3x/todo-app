@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from "react";
-import TodoReducer from "store/todo/todo-reducer";
-import TodoState from "store/todo/todo-state";
+import TodoReducer from "./todo-reducer";
+import TodoState from "./todo-state";
 
 const TodoContext = React.createContext();
 

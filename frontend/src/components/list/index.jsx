@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
-import useTodoCrud from "../../hooks/useTodo";
+import { useEffect } from "react";
 import useTodo from "../../hooks/useTodo";
 import Add from "../add";
 import Update from "../update";
 
 const TodoList = () => {
-  const [list, setList] = useState([]),
-    { read, edit, updateModalHandler } = useTodoCrud(),
-    handleRead = () => read().then((response) => setList(response)),
-    handleEdit = (id) => edit(id).then(updateModalHandler);
+  const {
+      read,
+      edit,
+      destroy,
+      state: { list },
+    } = useTodo(),
+    handleRead = () => read(),
+    handleEdit = (id) => edit(id),
+    handleDelete = (id) => window.confirm("Are you sure?") && destroy(id);
 
   useEffect(() => {
     handleRead();
@@ -16,7 +20,7 @@ const TodoList = () => {
 
   return (
     <>
-      <Add setList={setList} />
+      <Add />
       <table className="table table-striped">
         <thead>
           <tr>
@@ -28,28 +32,30 @@ const TodoList = () => {
         </thead>
         <tbody>
           {Boolean(list.length) ? (
-            list.map(({ _id, name, status }) => (
+            list.map(({ _id, name, done }) => (
               <tr key={_id}>
                 <td>{_id}</td>
                 <td>{name}</td>
                 <td>
-                  {status ? (
+                  {done ? (
                     <span className="text-success">Done!</span>
                   ) : (
                     <span className="text-danger">Pending</span>
                   )}
                 </td>
                 <td>
-                  <button className="btn btn-success btn-sm me-2">
-                    Mark as done
-                  </button>
                   <button
                     className="btn btn-info btn-sm me-2"
                     onClick={() => handleEdit(_id)}
                   >
                     Update
                   </button>
-                  <button className="btn btn-danger btn-sm">Delete</button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(_id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))
@@ -60,7 +66,7 @@ const TodoList = () => {
           )}
         </tbody>
       </table>
-      <Update setList={setList} />
+      <Update />
     </>
   );
 };

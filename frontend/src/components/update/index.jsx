@@ -2,27 +2,31 @@ import { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "../modal";
 import useTodo from "../../hooks/useTodo";
+import { TOGGLE_SHOW_EDIT_MODAL } from "../../constant/actions-type";
 
-const Update = ({ setList }) => {
-  const [name, setName] = useState(""),
-    { create, updateModalIsOpen, updateModalHandler } = useTodo(),
+const Update = () => {
+  const {
+      update,
+      state: { updateModalIsOpen, selectedItem },
+      dispatch,
+    } = useTodo(),
+    [name, setName] = useState(""),
+    [done, setIsDone] = useState(false),
     handleName = ({ target: { value } }) => setName(value),
-    handleSubmit = () =>
-      create({ name }).then((newItem) => {
-        updateModalHandler();
-        setName("");
-        setList((prevList) => [...prevList, newItem]);
-      });
+    handleDone = ({ target: { checked } }) => setIsDone(checked),
+    modalDisplayHandler = () => dispatch({ type: TOGGLE_SHOW_EDIT_MODAL }),
+    handleSubmit = () => name && update({ name, done }, selectedItem._id);
 
   useEffect(() => {
-    console.log(updateModalIsOpen);
-  }, [updateModalIsOpen]);
+    setName(selectedItem?.name ?? "");
+    setIsDone(selectedItem?.done ?? false);
+  }, [selectedItem]);
 
   return (
     <Modal
       show={updateModalIsOpen}
       title="Update Todo"
-      handleClose={updateModalHandler}
+      handleClose={modalDisplayHandler}
       handleSubmit={handleSubmit}
     >
       <div className="col-12">
@@ -35,6 +39,16 @@ const Update = ({ setList }) => {
           />
           <Form.Label>Name</Form.Label>
         </Form.Floating>
+      </div>
+      <div className="col-12 mt-3">
+        <Form.Group className="mb-3">
+          <Form.Check
+            type="checkbox"
+            checked={done}
+            label="Done"
+            onChange={handleDone}
+          />
+        </Form.Group>
       </div>
     </Modal>
   );

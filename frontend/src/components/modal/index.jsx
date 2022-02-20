@@ -1,5 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import useTodo from "../../hooks/useTodo";
 
 function Dialog({
   title,
@@ -11,6 +12,7 @@ function Dialog({
   submitButtonLabel = "Confirm",
   centered = true,
 }) {
+  const { pending } = useTodo();
   return (
     <Modal show={show} onHide={handleClose} centered={centered}>
       <Modal.Header closeButton>
@@ -18,10 +20,10 @@ function Dialog({
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="default" onClick={handleClose} disabled={pending}>
           {closeButtonLabel}
         </Button>
-        <Button variant="primary" onClick={handleSubmit}>
+        <Button variant="primary" onClick={handleSubmit} disabled={pending}>
           {submitButtonLabel}
         </Button>
       </Modal.Footer>

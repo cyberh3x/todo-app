@@ -3,18 +3,22 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "../modal";
 import useTodo from "../../hooks/useTodo";
+import { TOGGLE_SHOW_ADD_MODAL } from "../../constant/actions-type";
 
-const Add = ({ setList }) => {
-  const [show, setShow] = useState(false),
-    [name, setName] = useState(""),
-    { create, get } = useTodo(),
-    modalDisplayHandler = () => setShow(!show),
+const Add = () => {
+  const [name, setName] = useState(""),
+    {
+      create,
+      state: { addModalIsOpen },
+      dispatch,
+    } = useTodo(),
+    modalDisplayHandler = () => dispatch({ type: TOGGLE_SHOW_ADD_MODAL }),
     handleName = ({ target: { value } }) => setName(value),
     handleSubmit = () =>
-      create({ name }).then((newItem) => {
+      name &&
+      create({ name }).then(() => {
         modalDisplayHandler();
         setName("");
-        setList((prevList) => [...prevList, newItem]);
       });
   return (
     <div className="col-12">
@@ -26,7 +30,7 @@ const Add = ({ setList }) => {
         </div>
       </div>
       <Modal
-        show={show}
+        show={addModalIsOpen}
         title="Add Todo"
         handleClose={modalDisplayHandler}
         handleSubmit={handleSubmit}
